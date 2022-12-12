@@ -11,6 +11,7 @@ const port = 3000;
 
 app.set("view engine", "ejs");
 app.use(expressEjsLayouts);
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   const mahasiswa = [
@@ -35,8 +36,16 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/:id", (req, res) => {
-  res.send("Your Param id is : " + req.params.id);
+app.get("/about", (req, res) => {
+  res.render("about", {
+    title: "About",
+    layout: "layouts/main-layout",
+  });
+});
+
+app.use("/", (req, res, next) => {
+  res.status(404).send("404 Not Found");
+  next();
 });
 
 app.listen(port, () => {
