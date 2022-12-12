@@ -1,0 +1,29 @@
+{
+  "name": "contact-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rasyadsr/nodejs-contact-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rasyadsr/nodejs-contact-app/issues"
+  },
+  "homepage": "https://github.com/rasyadsr/nodejs-contact-app#readme",
+  "description": "",
+  "dependencies": {
+    "express": "4.17.1"
+  }
+}
