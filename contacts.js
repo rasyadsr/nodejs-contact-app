@@ -1,10 +1,6 @@
-import readline from "readline";
-import fs from "fs";
-
-const rl = readline.createInterface({
-  input: process.stdin, // Apa" yang dikirim
-  output: process.stdout, // Apa" yang di tampilkan
-});
+const fs = require("fs");
+const chalk = require("chalk");
+const validator = require("validator");
 
 const dirPath = "./data";
 if (!fs.existsSync(dirPath)) {
@@ -17,51 +13,40 @@ if (!fs.existsSync(dataPath)) {
   fs.writeFileSync(dataPath, "[]", "utf-8");
 }
 
-/**
- * Gunakan function ini untuk meng-generate pertanyaan
- * @param {string} pertanyaan
- * @returns
- */
-export const tulisPertanyaan = (pertanyaan) => {
-  return new Promise((resolve, reject) => {
-    rl.question(`Masukan ${pertanyaan} anda : `, (pertanyaan) =>
-      resolve(pertanyaan)
-    );
-  });
-};
-
-export const simpanContact = (nama, noHP, email) => {
+const simpanContact = (nama, noHP, email) => {
   const contact = { nama, noHP, email };
   const file = fs.readFileSync("data/contacts.json", "utf-8");
   const contacts = JSON.parse(file) || [];
+
+  // Check Duplicate
+  const checkDuplicate = contacts.find((contact) => contact.nama === nama);
+  if (checkDuplicate) {
+    console.log(
+      chalk.red.inverse.bold("Kontak sudah terdaftar, gunakan nama lain !")
+    );
+    return false;
+  }
+
+  // Check Valid Email
+  if (email) {
+    if (!validator.isEmail(email)) {
+      console.log(chalk.red.inverse.bold("Email tidak valid!"));
+      return false;
+    }
+  }
+
+  if (noHP) {
+    if (!validator.isMobilePhone(noHP, "id-ID")) {
+      console.log(chalk.red.inverse.bold("Nomor HP tidak valid!"));
+      return false;
+    }
+  }
 
   contacts.push(contact);
 
   fs.writeFileSync("data/contacts.json", JSON.stringify(contacts));
 
-  console.log("Terima kasih sudah memasukan data.");
-
-  rl.close(); // agar close dari input terminal nya
+  console.log(chalk.green.inverse.bold("Terima kasih sudah memasukan data."));
 };
 
-/**
- * Jangan pake ini, ini contoh aja
- * Pakai yang dynamis aja
- *
-    const questionName = () => {
-    return new Promise((resolve, reject) => {
-        rl.question("Masukn nama anda : ", (nama) => {
-        resolve(nama);
-        });
-    });
-    };
-
-    const questionNoHp = () => {
-    return new Promise((resolve, reject) => {
-        rl.question("Masukan no HP anda : ", (noHP) => {
-        resolve(noHP);
-        });
-    });
-    };
-
-*/
+module.exports = { simpanContact };

@@ -9,5 +9,9 @@
   "keywords": [],
   "author": "Mochamad Rasyad",
   "license": "ISC",
-  "type": "module"
+  "dependencies": {
+    "chalk": "4.1.0",
+    "validator": "13.5.2",
+    "yargs": "^17.6.2"
+  }
 }
