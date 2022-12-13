@@ -3,6 +3,7 @@ import expressEjsLayouts from "express-ejs-layouts";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
+import methodOverride from "method-override";
 
 // Koneksi
 import "./utils/database.js";
@@ -13,6 +14,7 @@ import contactRoutes from "./routes/contactRoutes.js";
 const app = express();
 const port = 3000;
 
+app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 app.use(expressEjsLayouts);
 app.use(express.static("public"));

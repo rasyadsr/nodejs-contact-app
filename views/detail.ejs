@@ -12,16 +12,24 @@
           <p class="card-text"><%= contact.email %></p>
           <div class="mb-2">
             <a
-              href="/contact/edit/<%= contact.nama %>"
+              href="/contacts/edit/<%= contact.nama %>"
               class="btn btn-info badge"
               >Edit</a
             >
-            <a
-              href="/contact/delete/<%= contact.nama %>"
-              class="btn btn-danger badge"
-              onclick="return confirm('Yakin mau di hapus?')"
-              >Hapus</a
+            <form
+              action="/contacts?_method=DELETE"
+              method="post"
+              class="d-inline"
             >
+              <input type="hidden" name="nama" value="<%= contact.nama %>" />
+              <button
+                type="submit"
+                class="btn btn-danger badge"
+                onclick="return confirm('Yakin mau di hapus?')"
+              >
+                Hapus
+              </button>
+            </form>
           </div>
           <a href="/contacts" class="card-link">&laquo Kembali</a>
         </div>

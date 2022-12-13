@@ -11,7 +11,8 @@
         </ul>
       </div>
       <% } %>
-      <form action="/contact/update" method="post">
+      <form action="/contacts?_method=PUT" method="post">
+        <input type="hidden" name="id" value="<%= contact._id %>" />
         <input
           type="hidden"
           name="oldNama"
@@ -45,9 +46,9 @@
             type="text"
             class="form-control"
             id="noHp"
-            name="noHP"
+            name="noHp"
             required
-            value="<%= contact.noHP %>"
+            value="<%= contact.noHp %>"
           />
         </div>
         <button type="submit" class="btn btn-primary">Ubah Data Contact</button>
