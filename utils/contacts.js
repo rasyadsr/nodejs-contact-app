@@ -44,3 +44,22 @@ export const checkDuplicate = (nama) => {
   const contacts = loadContact();
   return contacts.find((contact) => contact.nama === nama);
 };
+
+export const deleteContact = (nama) => {
+  const contacts = loadContact();
+  const filteredContacts = contacts.filter((contact) => contact.nama !== nama);
+  saveContacts(filteredContacts);
+};
+
+export const updateContact = (contactBaru) => {
+  const contacts = loadContact();
+  const index = contacts.findIndex(
+    (contact) => contact.nama == contactBaru.oldNama
+  );
+
+  delete contactBaru.oldNama;
+  const updateContact = contactBaru;
+
+  contacts[index] = updateContact;
+  saveContacts(contacts);
+};

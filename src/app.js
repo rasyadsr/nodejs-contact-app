@@ -14,6 +14,8 @@ import {
   findContactByNama,
   addContact,
   checkDuplicate,
+  deleteContact,
+  updateContact,
 } from "./../utils/contacts.js";
 
 const app = express();
@@ -70,6 +72,7 @@ app.get("/about", (req, res) => {
   });
 });
 
+// Index
 app.get("/contact", (req, res) => {
   const contacts = loadContact();
 
@@ -87,6 +90,8 @@ app.get("/contact", (req, res) => {
  * kalau ngga gini, dia akan tetap masuk
  * ke /contact/:nama
  */
+
+// Create
 app.get("/contact/add", (req, res) => {
   res.render("add-contact", {
     title: "Form Tambah Data Contact",
@@ -94,6 +99,7 @@ app.get("/contact/add", (req, res) => {
   });
 });
 
+// Store
 app.post(
   "/contact",
   [
@@ -134,6 +140,73 @@ app.post(
   }
 );
 
+// Delete
+app.get("/contact/delete/:nama", (req, res) => {
+  const contact = findContactByNama(req.params.nama);
+  if (!contact) {
+    res.status(404).send("404");
+    return;
+  }
+  deleteContact(req.params.nama);
+  req.flash("msg", "Data berhasi; di hapus!");
+  res.redirect("/contact");
+});
+
+// Edit Contact
+app.get("/contact/edit/:nama", (req, res) => {
+  const contact = findContactByNama(req.params.nama);
+  res.render("edit-contact", {
+    title: "Form Ubah Data Contact",
+    layout: "layouts/main-layout",
+    contact,
+  });
+});
+
+app.post(
+  "/contact/update",
+  [
+    /**
+     * Express validator memungkingkan validasi custome
+     * bisa memamnggil object req
+     */
+    body("nama").custom((value, { req }) => {
+      const duplicate = checkDuplicate(value);
+      if (value != req.body.oldNama && duplicate) {
+        /**
+         * throew new Error = return false dengan pesan
+         * butuh pesan error supaya masuk ke errors = validationResult(req)
+         */
+        throw new Error("Nama Contact sudah digunakan!");
+      }
+      /**
+       * Kalau validasi lolos return true
+       */
+      return true;
+    }),
+    check("email", "Email tidak valid!").isEmail(),
+    check("noHP", "No Hp tidak valid").isMobilePhone("id-ID"),
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // return res.status(400).json({ errors: errors.array() });
+      res.render("edit-contact", {
+        title: "Form Tambah Data Contact",
+        layout: "layouts/main-layout",
+        errors: errors.array(),
+        contact: req.body,
+      });
+      return;
+    }
+    updateContact(req.body);
+    // Kirimkan flash message
+    req.flash("msg", "Data berhasil di ubah!");
+    res.redirect("/contact");
+  }
+);
+
+// Detail
 app.get("/contact/:nama", (req, res) => {
   const contact = findContactByNama(req.params.nama);
 
