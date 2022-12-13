@@ -1,3 +1,4 @@
+import { constants } from "buffer";
 import fs from "fs";
 
 const dirPath = "./data";
@@ -25,4 +26,21 @@ export const findContactByNama = (nama) => {
   );
 
   return contact;
+};
+
+// Menulis / menimpa file contact.json
+const saveContacts = (contacts) => {
+  fs.writeFileSync("data/contacts.json", JSON.stringify(contacts));
+};
+
+// Menambah data contact baru
+export const addContact = (contact) => {
+  const contacts = loadContact();
+  contacts.push(contact);
+  saveContacts(contacts);
+};
+
+export const checkDuplicate = (nama) => {
+  const contacts = loadContact();
+  return contacts.find((contact) => contact.nama === nama);
 };
